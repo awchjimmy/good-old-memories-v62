@@ -1,11 +1,11 @@
 services:
   database:
-    image: mysql:8
+    image: mysql:5.7.38
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ragezone
       MYSQL_DATABASE: XiuzSource
     volumes:
-      - ./XiuzSource/SQL/XiuzSource.sql:/docker-entrypoint-initdb.d/XiuzSource.sql
+      - ./SQL/XiuzSource.sql:/docker-entrypoint-initdb.d/XiuzSource.sql
     ports:
       - 3306:3306
