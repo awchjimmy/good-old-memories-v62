@@ -13,5 +13,14 @@
 ### What is this repack based on?
 - [XiuzSource](https://forum.ragezone.com/threads/v62-xiuzsource-3-4.598816/)
 
+### Setting up database server
+```sh
+cd v62-database-server
+docker compose up
+```
+
+### Setting up game server
+Work in progress.
+
 ### Project Status
 Work in progress.
