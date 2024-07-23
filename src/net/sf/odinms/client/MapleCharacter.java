@@ -4059,7 +4059,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     public List<Integer> getVIPRockMaps(int type) {
         List<Integer> rockmaps = new LinkedList<Integer>();
         try {
-            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT mapid FROM VIPRockMaps WHERE cid = ? AND type = ?");
+            PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT mapid FROM viprockmaps WHERE cid = ? AND type = ?");
             ps.setInt(1, id);
             ps.setInt(2, type);
             ResultSet rs = ps.executeQuery();

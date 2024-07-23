@@ -3,3 +3,7 @@
 
 # game files
 wz/
+
+# intellij idea
+out/
+.idea/

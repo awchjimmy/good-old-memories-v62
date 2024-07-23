@@ -25,8 +25,12 @@ import net.sf.odinms.net.world.guild.MapleAlliance;
 import net.sf.odinms.net.world.remote.WorldChannelInterface;
 import net.sf.odinms.tools.MaplePacketCreator;
 import net.sf.odinms.tools.data.input.SeekableLittleEndianAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
+    private static final Logger log = LoggerFactory.getLogger(PlayerLoggedinHandler.class);
+
     @Override
     public boolean validateState(MapleClient c) {
         return !c.isLoggedIn();
@@ -34,6 +38,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 
     @Override
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        // load character
         int cid = slea.readInt();
         MapleCharacter player = null;
         try {
@@ -46,6 +51,8 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
         int state = c.getLoginState();
         boolean allowLogin = true;
         ChannelServer channelServer = c.getChannelServer();
+
+        // update login state
         synchronized (this) {
             try {
                 WorldChannelInterface worldInterface = channelServer.getWorldInterface();
@@ -73,6 +80,8 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
             }
             c.updateLoginState(MapleClient.LOGIN_LOGGEDIN);
         }
+
+        // buffs and cooldowns
         ChannelServer cserv = ChannelServer.getInstance(c.getChannel());
         cserv.addPlayer(player);
         try {
@@ -88,9 +97,12 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
         } catch (RemoteException e) {
             c.getChannelServer().reconnectWorld();
         }
+
+        // cooldowns
         Connection con = DatabaseConnection.getConnection();
+
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT SkillID,StartTime,length FROM CoolDowns WHERE charid = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT SkillID,StartTime,length FROM cooldowns WHERE charid = ?");
             ps.setInt(1, c.getPlayer().getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -99,7 +111,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                 }
                 c.getPlayer().giveCoolDowns(rs.getInt("SkillID"), rs.getLong("StartTime"), rs.getLong("length"));
             }
-            ps = con.prepareStatement("DELETE FROM CoolDowns WHERE charid = ?");
+            ps = con.prepareStatement("DELETE FROM cooldowns WHERE charid = ?");
             ps.setInt(1, c.getPlayer().getId());
             ps.executeUpdate();
             rs.close();
@@ -107,7 +119,12 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
         } catch (SQLException se) {
             se.printStackTrace();
         }
+
+
+        // packets
         c.getSession().write(MaplePacketCreator.getCharInfo(player));
+
+        // duey packages
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM dueypackages WHERE RecieverId = ? and checked = 1");
             ps.setInt(1, c.getPlayer().getId());
@@ -120,12 +137,18 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
         } catch (SQLException se) {
             se.printStackTrace();
         }
+
+        // gm skills
         if (player.isGM()) {
             SkillFactory.getSkill(9001000).getEffect(1).applyTo(player);
             SkillFactory.getSkill(9101004).getEffect(1).applyTo(player);
         }
+
+        // server message
         c.getSession().write(MaplePacketCreator.serverMessage(c.getChannelServer().getServerMessage()));
         player.getMap().addPlayer(player);
+
+        // buddy, party, guide
         try {
             Collection<BuddylistEntry> buddies = player.getBuddylist().getBuddies();
             int buddyIds[] = player.getBuddylist().getBuddyIds();
@@ -163,18 +186,26 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
         } catch (RemoteException e) {
             channelServer.reconnectWorld();
         }
+
+        // party
         player.updatePartyMemberHP();
+
+        // keymap
         player.sendKeymap();
         for (MapleQuestStatus status : player.getStartedQuests()) {
             if (status.hasMobKills()) {
                 c.getSession().write(MaplePacketCreator.updateQuestMobKills(status));
             }
         }
+
+        // pending buddy
         CharacterNameAndId pendingBuddyRequest = player.getBuddylist().pollPendingRequest();
         if (pendingBuddyRequest != null) {
             player.getBuddylist().put(new BuddylistEntry(pendingBuddyRequest.getName(), pendingBuddyRequest.getId(), -1, false));
             c.getSession().write(MaplePacketCreator.requestBuddylistAdd(pendingBuddyRequest.getId(), pendingBuddyRequest.getName()));
         }
+
+        // others
         player.checkMessenger();
         player.checkBerserk();
     }
