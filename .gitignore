@@ -7,3 +7,4 @@ wz/
 # intellij idea
 out/
 .idea/
+*.iml

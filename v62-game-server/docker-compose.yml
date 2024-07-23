@@ -2,15 +2,15 @@ services:
   worldserver:
     image: openjdk:7
     volumes:
-      - .:/XiuzSource
-    working_dir: /XiuzSource
+      - .:/v62
+    working_dir: /v62
     command: ./launch_world.sh
 
   channelserver:
     image: openjdk:7
     volumes:
-      - .:/XiuzSource
-    working_dir: /XiuzSource
+      - .:/v62
+    working_dir: /v62
     command: ./launch_channel.sh
     ports:
       - 7575:7575
@@ -21,8 +21,8 @@ services:
   loginserver:
     image: openjdk:7
     volumes:
-      - .:/XiuzSource
-    working_dir: /XiuzSource
+      - .:/v62
+    working_dir: /v62
     command: ./launch_login.sh
     ports:
       - 8484:8484
