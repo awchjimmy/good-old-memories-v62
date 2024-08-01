@@ -25,6 +25,8 @@ import net.sf.odinms.net.world.remote.CheaterData;
 import net.sf.odinms.net.world.remote.WorldChannelInterface;
 import net.sf.odinms.net.world.remote.WorldLocation;
 import net.sf.odinms.tools.CollectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements WorldChannelInterface {
 
@@ -32,6 +34,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
     private ChannelWorldInterface cb;
     private int dbId;
     private boolean ready = false;
+    protected static final Logger log = LoggerFactory.getLogger(WorldChannelInterfaceImpl.class);
 
     public WorldChannelInterfaceImpl() throws RemoteException {
         super(0, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory());
@@ -89,6 +92,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 return cwi.getIP();
             } catch (RemoteException e) {
+                log.error("Error getIP", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(channel);
                 return "0.0.0.0:0";
             }
@@ -101,6 +105,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.whisper(sender, target, channel, message);
             } catch (RemoteException e) {
+                log.error("Error whisper", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -114,6 +119,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
                     return true;
                 }
             } catch (RemoteException e) {
+                log.error("Error isConnected", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -126,6 +132,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.broadcastMessage(sender, message);
             } catch (RemoteException e) {
+                log.error("Error broadcastMessage", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -139,6 +146,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
                     return cwi.getChannelId();
                 }
             } catch (RemoteException e) {
+                log.error("Error find 1", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -154,6 +162,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
                     return cwi.getChannelId();
                 }
             } catch (RemoteException e) {
+                log.error("Error find 2", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -173,6 +182,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.shutdown(time);
             } catch (RemoteException e) {
+                log.error("Error shutdown", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -188,6 +198,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
                 ret.put(i, curConnected);
                 total += curConnected;
             } catch (RemoteException e) {
+                log.error("Error getConnected", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -201,6 +212,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.loggedOn(name, characterId, channel, buddies);
             } catch (RemoteException e) {
+                log.error("Error loggedOn", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -213,6 +225,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.loggedOff(name, characterId, channel, buddies);
             } catch (RemoteException e) {
+                log.error("Error loggedOff", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -249,6 +262,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.updateParty(party, operation, target);
             } catch (RemoteException e) {
+                log.error("Error updateParty", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -273,6 +287,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.partyChat(party, chattext, namefrom);
             } catch (RemoteException e) {
+                log.error("Error partyChat", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -290,6 +305,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
                     return new WorldLocation(cwi.getLocation(charName), cwi.getChannelId());
                 }
             } catch (RemoteException e) {
+                log.error("Error isAvailable", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -303,6 +319,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 allCheaters.addAll(cwi.getCheaters());
             } catch (RemoteException e) {
+                log.error("Error getCheaters", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -430,6 +447,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.messengerInvite(sender, messengerid, target, fromchannel);
             } catch (RemoteException e) {
+                log.error("Error messengerInvite", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -448,6 +466,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.removeMessengerPlayer(messenger, position);
             } catch (RemoteException e) {
+                log.error("Error leaveMessenger", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -465,6 +484,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.addMessengerPlayer(messenger, from, fromchannel, target.getPosition());
             } catch (RemoteException e) {
+                log.error("Error joinMessenger", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -480,6 +500,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.messengerChat(messenger, chattext, namefrom);
             } catch (RemoteException e) {
+                log.error("Error messengerChat", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -491,6 +512,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.declineChat(target, namefrom);
             } catch (RemoteException e) {
+                log.error("Error declineChat", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -505,6 +527,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.updateMessenger(messenger, namefrom, position, fromchannel);
             } catch (RemoteException e) {
+                log.error("Error updateMessenger", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -552,6 +575,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.broadcastGMMessage(sender, message);
             } catch (RemoteException e) {
+                log.error("Error broadcastGMMessage", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -563,6 +587,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.broadcastSMega(sender, message);
             } catch (RemoteException e) {
+                log.error("Error broadcastSMega", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -574,6 +599,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 cwi.broadcastToClan(message, clan);
             } catch (RemoteException e) {
+                log.error("Error broadcastToClan", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
@@ -586,6 +612,7 @@ public class WorldChannelInterfaceImpl extends UnicastRemoteObject implements Wo
             try {
                 size += cwi.onlineClanMembers(clan);
             } catch (RemoteException e) {
+                log.error("Error onlineClanMembers", e);
                 WorldRegistryImpl.getInstance().deregisterChannelServer(i);
             }
         }
