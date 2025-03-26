@@ -9,17 +9,22 @@
 
 ### Setting up database server
 ```sh
-cd v62-database-server
-docker compose up
+docker compose up dbserver
 ```
 
-### Setting up game server
+### Setting up world/channel/login server
 1. Extract `wz.7z`
 2. Modify settings in `db.properties` and `world.properties`
 3. Start server
 ```sh
-cd v62-game-server
-docker compose up
+docker compose up worldserver
+docker compose up channelserver
+docker compose up loginserver
+```
+
+### Setting up adminer for database management (optional)
+```sh
+docker compose up adminer
 ```
 
 ### What is this repack based on?

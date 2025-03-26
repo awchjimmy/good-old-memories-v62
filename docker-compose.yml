@@ -1,4 +1,22 @@
 services:
+  dbserver:
+    image: mysql:5.7.38
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ragezone
+      MYSQL_DATABASE: XiuzSource
+    volumes:
+      - ./db/XiuzSource.sql:/docker-entrypoint-initdb.d/XiuzSource.sql
+      - v62-mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer:5
+    restart: always
+    ports:
+      - 8080:8080
+
   worldserver:
     image: openjdk:7
     volumes:
@@ -27,4 +45,7 @@ services:
     ports:
       - 8484:8484
     depends_on:
-      - worldserver       
+      - worldserver   
+
+volumes:
+  v62-mysql-data:    

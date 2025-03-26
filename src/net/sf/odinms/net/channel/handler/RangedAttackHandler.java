@@ -133,7 +133,7 @@ public class RangedAttackHandler extends AbstractDealDamageHandler {
                 } else { // l7 has a different formula :>
                     basedamage = (int) (((c.getPlayer().getTotalLuk() * 5.0) / 100.0) * (c.getPlayer().getTotalWatk() + projectileWatk));
                 }
-                if (attack.skill == 3101005) { //arrowbomb is hardcore like that �.o
+                if (attack.skill == 3101005) { //arrowbomb is hardcore like that
                     basedamage *= effect.getX() / 100.0;
                 }
                 int maxdamage = basedamage;
