@@ -1,11 +1,23 @@
 # Good old memories v62
 
-### What is the purpose of this repack?
-1. Easy setup for modern machines (via Docker).
+## General FAQ
 
-### Security Concerns
-1. This repack is based on some 10+ years deprecated libraries.
-2. A lot of places use default credentials which will lead to data breach.
+#### What is the purpose of this repack?  
+  * Easy setup for modern machines (via Docker).
+
+#### What is this repack based on?  
+  * [XiuzSource](https://forum.ragezone.com/threads/v62-xiuzsource-3-4.598816/)
+
+#### Project Status  
+  * Server side runs on docker.
+
+#### Security Concerns  
+  * This repack is based on some 10+ years deprecated libraries.
+  * A lot of places use default credentials which will lead to data breach.
+
+---
+
+## Server Admin
 
 ### Setting up database server
 ```sh
@@ -27,8 +39,11 @@ docker compose up loginserver
 docker compose up adminer
 ```
 
-### What is this repack based on?
-- [XiuzSource](https://forum.ragezone.com/threads/v62-xiuzsource-3-4.598816/)
+---
 
-### Project Status
-1. Server side runs on docker.
+## Developer
+
+### Generate javadoc
+```sh
+javadoc -d docs -sourcepath src -subpackages net.sf.odinms
+```
