@@ -45,6 +45,10 @@ docker compose up adminer
 
 ### How to compile
 ```sh
+# validate apache ant is working
+ant -version
+# Apache Ant(TM) version 1.9.16 compiled on July 10 2021
+
 # compile
 ant compile
 
