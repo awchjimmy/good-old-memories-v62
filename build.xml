@@ -1,0 +1,35 @@
+<project name="v62" default="jar" basedir=".">
+    
+    <!-- Define Directories -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="jar.name" value="XiuzSource.jar"/>
+
+    <!-- Create Build Directory -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <!-- Compile Source Code -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <classpath>
+                <fileset dir="${dist.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- Create JAR -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}/${jar.name}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="net.sf.odinms.world.WorldServer"/>
+            </manifest>
+        </jar>
+        <echo message="JAR created: ${dist.dir}/${jar.name}"/>
+    </target>
+
+</project>

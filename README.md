@@ -43,6 +43,18 @@ docker compose up adminer
 
 ## Developer
 
+### How to compile
+```sh
+# compile
+ant compile
+
+# pack jar
+ant jar
+
+# all in one command
+ant
+```
+
 ### Generate javadoc
 ```sh
 javadoc -d docs -sourcepath src -subpackages net.sf.odinms
