@@ -10,6 +10,14 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Converts raw bytes into MaplePacket.
+ * 
+ * <p>
+ * When the server receives data from a client, this decoder is responsible for reading the raw bytes and assembling them into a MaplePacket object. 
+ * It handles the specifics of the game's network protocol, such as packet headers and length.
+ * </p>
+ */
 public class MaplePacketDecoder extends CumulativeProtocolDecoder {
     private static final String DECODER_STATE_KEY = MaplePacketDecoder.class.getName() + ".STATE";
     private static Logger log = LoggerFactory.getLogger(MaplePacketDecoder.class);

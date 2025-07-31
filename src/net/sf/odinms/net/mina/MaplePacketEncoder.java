@@ -8,6 +8,13 @@ import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
+/**
+ * Converts MaplePacket into raw bytes.
+ * 
+ * <p>
+ * When the server wants to send data to a client, this encoder takes a MaplePacket object and converts it into a stream of bytes that can be sent over the network.
+ * </p>
+ */
 public class MaplePacketEncoder implements ProtocolEncoder {
     //private static Logger log = LoggerFactory.getLogger(MaplePacketEncoder.class);
 
