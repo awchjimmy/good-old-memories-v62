@@ -12,6 +12,13 @@ import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
 
+/**
+ * It's the primary entry point for all network events.
+ * 
+ * <p>
+ * This is an IoHandlerAdapter that gets attached to the SocketAcceptor. It's the primary entry point for all network events.
+ * </p>
+ */
 public class MapleServerHandler extends IoHandlerAdapter {
 
     private final static short MAPLE_VERSION = 62;
@@ -52,6 +59,9 @@ public class MapleServerHandler extends IoHandlerAdapter {
         // }
     }
 
+    /**
+     * Called when a new client connects, it creates a MapleClient object to represent the connection.
+     */
     @Override
     public void sessionOpened(IoSession session) throws Exception {
         //log.info("IoSession with {} opened", session.getRemoteAddress());
@@ -76,6 +86,9 @@ public class MapleServerHandler extends IoHandlerAdapter {
         session.setIdleTime(IdleStatus.WRITER_IDLE, 30);
     }
 
+    /**
+     * Called when a client disconnects, it handles cleaning up the MapleClient and removing the player from the game.
+     */
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         synchronized (session) {
@@ -89,6 +102,14 @@ public class MapleServerHandler extends IoHandlerAdapter {
         super.sessionClosed(session);
     }
 
+    /**
+     * Dispatches the packet to the appropriate MaplePacketHandler for processing based on the packet's opcode.
+     * 
+     * <p>
+     * Called when a complete MaplePacket has been decoded by the MaplePacketDecoder. 
+     * The handler then dispatches the packet to the appropriate MaplePacketHandler for processing based on the packet's opcode.
+     * <p>
+     */
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         byte[] content = (byte[]) message;
